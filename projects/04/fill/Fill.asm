@@ -12,3 +12,48 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+(bigloop)
+@i
+M=0
+@KBD
+D = M
+@paintloop
+D;JNE
+
+(clearloop)
+@SCREEN
+D = A
+@i
+D = D+M
+A = D
+M = 0
+@i
+M = M+1
+D = M
+@8192
+D = D - A
+@clearloop
+D,JLT
+
+@bigloop
+0;JEQ
+
+(paintloop)
+@SCREEN
+D = A
+@i
+D = D+M
+A = D
+M = -1
+@i
+M = M+1
+D = M
+@8192
+D = D - A
+@paintloop
+D,JLT
+
+@bigloop
+0;JEQ
+
