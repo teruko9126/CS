@@ -39,5 +39,52 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+
+
+    And(a=instruction[5], b=instruction[15], out=prewriteA);
+    And(a=instruction[4], b=instruction[15], out=writeD);
+    And(a=instruction[3], b=instruction[15], out=writeM);
+
+    Not(in=instruction[15], out=notinst15);
+    Or(a=notinst15, b=prewriteA, out=writeA);
+    
+
+    Mux16(a=instruction, b=nextaddress, sel=instruction[15], out=inaddress);
+    //aを更新しない可能性もある。inst[15]==0であればそのままinstで値の更新が行われる..ok
+    //aluの時に、更新しないままで行けば大丈夫..ok
+
+    ARegister(in=inaddress, load=writeA, out[0..14]=addressM,out = useaddress);
+    //inを使うのはどんな時？？
+
+    Mux16(a=useaddress, b=inM, sel=instruction[12], out=aorm);
+
+    DRegister(in=outalu, load=writeD, out=registd);
+    
+
+    ALU(x=registd, y=aorm, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8],
+     f=instruction[7], no=instruction[6], out=outM,out=outalu, zr=zralu, ng=ngalu);
+    
+    DMux8Way(in=true, sel=instruction[0..2], a=null, b=JGT, c=JEQ, d=JGE, e=JLT, f=JNE, g=JLE, h=JMP);
+
+    Not(in=zralu, out=notzralu);
+    Not(in=ngalu, out=pszralu);
+    And(a=pszralu, b=notzralu, out=psalu);
+    Or(a=ngalu, b=zralu, out=ngzralu);
+    
+    And(a=JGT, b=psalu, out=outJGT);
+    And(a=JEQ, b=zralu, out=outJEQ);
+    And(a=JGE, b=pszralu, out=outJGE);
+    And(a=JLT, b=ngalu, out=outJLT);
+    And(a=JNE, b=notzralu, out=outJNE);
+    And(a=JLE, b=ngzralu, out=outJLE);
+
+    Or8Way(in[0]=false,in[1]=outJGT,in[2]=outJEQ,in[3]=outJGE,in[4]=outJLT,in[5]=outJNE,in[6]=outJLE,in[7]=JMP, out=preokJMP);
+
+    And(a=preokJMP, b=instruction[15], out=okJMP);
+    
+    Mux16(a=useaddress, b=outalu, sel=writeA, out=nextaddress);
+    
+    Not(in=okJMP, out=doinc);
+    
+    PC(in=useaddress, load=okJMP, inc=doinc, reset=reset, out[0..14]=pc);
 }
