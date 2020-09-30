@@ -25,15 +25,13 @@ pair<string, string> orderA(string data)
       order.first = temp;
       temp = "";
     }
-    else if (!isspace(data[i]))
+    else
     {
       temp += data[i];
     }
     i++;
   }
   order.second = temp;
-  //cout << order.first << endl;
-  //cout << order.second << endl;
   return order;
   //コメントを無視する関数を入れていないのでそこでバグる危険性あり
 }
@@ -96,82 +94,149 @@ int main(int argc, char *argv[])
   ifstream fin;
   ofstream fout;
 
+  map<string, int> symbol;
+  symbol["SP"] = 0;
+  symbol["LCL"] = 1;
+  symbol["ARG"] = 2;
+  symbol["THIS"] = 3;
+  symbol["THAT"] = 4;
+  symbol["R0"] = 0;
+  symbol["R1"] = 1;
+  symbol["R2"] = 2;
+  symbol["R3"] = 3;
+  symbol["R4"] = 4;
+  symbol["R5"] = 5;
+  symbol["R6"] = 6;
+  symbol["R7"] = 7;
+  symbol["R8"] = 8;
+  symbol["R9"] = 9;
+  symbol["R10"] = 10;
+  symbol["R11"] = 11;
+  symbol["R12"] = 12;
+  symbol["R13"] = 13;
+  symbol["R14"] = 14;
+  symbol["R15"] = 15;
+  symbol["SCREEN"] = 16384;
+  symbol["KBD"] = 24576;
   string inname;
   inname = argv[1];
-  //cout << inname << endl;
 
-  fin.open(inname);
-  if (fin.fail())
+  int phase = 1;
+  while (phase <= 2)
   {
-    cout << "opening file failed" << endl;
-    return 0;
-  }
 
-  int dot = inname.find(".");
-  //cout << dot << endl;
-
-  string outname = inname.substr(0, dot);
-
-  outname = outname + ".hack";
-  //cout << outname << endl;
-
-  ofstream writing_file;
-  writing_file.open(outname, ios::out);
-
-  //if文で//以降の部分は全部省略しよう
-  //もし何もdataがないならそのまま次の文章読み込みに入る
-  string data;
-  int i = 0;
-  while (getline(fin, data))
-  {
-    string binarydata;
-    string::size_type pos = data.find("//");
-    if (pos != string::npos)
+    fin.open(inname);
+    if (fin.fail())
     {
-      data.erase(data.begin() + pos, data.end());
+      cout << "opening file failed" << endl;
+      return 0;
     }
-    //cout << data << endl;
-    if (data[0] == '@')
-    {
-      writing_file << "0";
-      string strnum = data.substr(1, data.size());
-      int num = atoi(strnum.c_str());
-      writing_file << bitset<15>(num) << endl;
-      //cout << bitset<15>(num) << endl;
-    }
-    else if (data.size() > 1)
-    {
-      string comp = "0000000";
-      string dest = "000";
-      string jump = "000";
 
-      //cout << "C" << endl;
-      writing_file << "111";
-      //destとcompで命令が構築されている
-      if (data.find('=') != string::npos)
+    int dot = inname.find(".");
+
+    string outname = inname.substr(0, dot);
+
+    outname = outname + ".hack";
+
+    ofstream writing_file;
+    writing_file.open(outname, ios::out);
+
+    //if文で//以降の部分は全部省略しよう
+    //もし何もdataがないならそのまま次の文章読み込みに入る
+    string data;
+    int counter = 0;
+    int newvar = 16;
+    while (getline(fin, data))
+    {
+      string binarydata;
+      int i = 0;
+      //空白文字を消すようにしている
+      while (i < data.size())
       {
-        pair<string, string> destcomp;
-        destcomp = orderA(data);
-        cout << "first" << destcomp.first << endl;
-        cout << "second" << destcomp.second << endl;
-        dest = destmap[destcomp.first];
-        comp = compmap[destcomp.second];
-        cout << dest << endl;
-        cout << comp << endl;
-        writing_file << comp << dest << jump << endl;
+        if (isspace(data[i]))
+        {
+          data.erase(data.begin() + i);
+        }
+        else
+        {
+          i++;
+        }
       }
-      else if (data.find(';') != string::npos)
+      string::size_type pos = data.find("//");
+      if (pos != string::npos)
       {
-        pair<string, string> compjump;
-        compjump = orderA(data);
-        //cout << compjump.first << endl;
-        //cout << compjump.second << endl;
-        comp = compmap[compjump.first];
-        jump = jumpmap[compjump.second];
-        writing_file << comp << dest << jump << endl;
+        data.erase(data.begin() + pos, data.end());
+      }
+      //cout << data << endl;
+      if (data[0] == '@')
+      {
+        //変数シンボルはメモリアドレス16番以降におく必要あり
+        writing_file << "0";
+        data = data.substr(1);
+        int num = 0;
+        if (isdigit(data[0]))
+        {
+          num = atoi(data.c_str());
+          writing_file << bitset<15>(num) << endl;
+        }
+        else if (phase == 2)
+        {
+          //variable(飛ぶためのテーブル)に入っていない、かつ決められたシンボルでもないものが変数として選ばれる
+          //新しく割り当てたものに関しては16番以降のアドレスを与える必要あり
+
+          auto it = symbol.find(data);
+          if (it == symbol.end())
+          {
+            symbol[data] = newvar;
+            num = newvar;
+            newvar++;
+          }
+          else
+          {
+            num = symbol[data];
+          }
+          //わざわざvariableテーブルを作る必要あるか？？？？
+          //symbolテーブルに入っていないなら新しく値を入れる仕組みにしたらいい
+          //決められた値については対応表を作る必要あり
+          writing_file << bitset<15>(num) << endl;
+        }
+        counter++;
+      }
+      else if (data[0] == '(')
+      {
+        data = data.substr(1, data.size() - 2);
+        symbol[data] = counter;
+      }
+      else if (data.size() > 1)
+      {
+        string comp = "0000000";
+        string dest = "000";
+        string jump = "000";
+
+        writing_file << "111";
+        //destとcompで命令が構築されている
+        if (data.find('=') != string::npos)
+        {
+          pair<string, string> destcomp;
+          destcomp = orderA(data);
+          dest = destmap[destcomp.first];
+          comp = compmap[destcomp.second];
+          writing_file << comp << dest << jump << endl;
+        }
+        else if (data.find(';') != string::npos)
+        {
+          pair<string, string> compjump;
+          compjump = orderA(data);
+          comp = compmap[compjump.first];
+          jump = jumpmap[compjump.second];
+          writing_file << comp << dest << jump << endl;
+        }
+        counter++;
       }
     }
-    i++;
+    phase++;
+    fin.close();
+    writing_file.close();
   }
 }
 
