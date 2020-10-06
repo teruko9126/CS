@@ -1,26 +1,27 @@
 {
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
   "tasks": [
     {
       "type": "shell",
-      "label": "C/C++: g++-9 build active file",
-      "command": "/usr/local/bin/g++-9",
+      "label": "clang++ build active file",
+      "command": "/usr/bin/clang++",
       "args": [
+        "-std=c++17",
+        "-stdlib=libc++",
         "-g",
-        "${file}",
+        "${fileDirname}/main.cpp",
+        "${fileDirname}/Parser.cpp",
+        "${fileDirname}/CodeWriter.cpp",
         "-o",
         "${fileDirname}/${fileBasenameNoExtension}"
       ],
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [
-        "$gcc"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "problemMatcher": ["$gcc"],
+      "group": "build"
     }
-  ],
-  "version": "2.0.0"
+  ]
 }
