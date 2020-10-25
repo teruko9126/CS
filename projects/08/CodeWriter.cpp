@@ -2,24 +2,17 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <assert.h>
 using namespace std;
 
 CodeWriter::CodeWriter(string filename)
 {
-  codewriter_ordernumber = 0;
-  int codewriter_lastslash = filename.rfind("/");
-  cout << codewriter_lastslash << endl;
-  codewriter_filename = filename.substr(codewriter_lastslash + 1);
-  cout << codewriter_filename << endl;
+  codewriter_number = 0;
+  codewriter_filename = filename;
   filename += ".asm";
   outf.open(filename.c_str());
   if (!outf.is_open())
     cerr << "ファイルを開くことができませんでした:" << filename << endl;
-  outf << "@256" << endl;
-  outf << "D=A" << endl;
-  outf << "@SP" << endl;
-  outf << "M=D" << endl;
+  writeInit();
 }
 
 CodeWriter::~CodeWriter()
@@ -28,9 +21,29 @@ CodeWriter::~CodeWriter()
     outf.close();
 }
 
+void CodeWriter::setempty(void)
+{
+  outf << endl;
+}
+
+void CodeWriter::setFileName(string filename)
+{
+  int codewriter_lastslash = filename.rfind("/");
+  codewriter_filename = filename.substr(codewriter_lastslash + 1);
+}
+
+void CodeWriter::writeInit(void)
+{
+  outf << "@256" << endl;
+  outf << "D=A" << endl;
+  outf << "@SP" << endl;
+  outf << "M=D" << endl;
+  writeCall("Sys.init", 0);
+}
+
 void CodeWriter::writeArithmetic(string command)
 {
-  if (command == "add")
+  if (command.substr(0, 3) == "add")
   {
     popSP();
     outf << "D=M" << endl;
@@ -38,7 +51,7 @@ void CodeWriter::writeArithmetic(string command)
     outf << "M=M+D" << endl;
     setSP();
   }
-  else if (command == "sub")
+  else if (command.substr(0, 3) == "sub")
   {
     popSP();
     outf << "D=M" << endl;
@@ -46,13 +59,13 @@ void CodeWriter::writeArithmetic(string command)
     outf << "M=M-D" << endl;
     setSP();
   }
-  else if (command == "neg")
+  else if (command.substr(0, 3) == "neg")
   {
     popSP();
     outf << "M=-M" << endl;
     setSP();
   }
-  else if (command == "eq")
+  else if (command.substr(0, 2) == "eq")
   {
     popSP();
     outf << "D=M" << endl;
@@ -72,7 +85,7 @@ void CodeWriter::writeArithmetic(string command)
     //stackの比較の結果をどこかに入れておいたら、それを代入するだけでいいから楽かもしれない
     codewriter_ordernumber++;
   }
-  else if (command == "gt")
+  else if (command.substr(0, 2) == "gt")
   {
     popSP();
     outf << "D=M" << endl;
@@ -98,7 +111,7 @@ void CodeWriter::writeArithmetic(string command)
     //stackの比較の結果をどこかに入れておいたら、それを代入するだけでいいから楽かもしれない
     codewriter_ordernumber++;
   }
-  else if (command == "lt")
+  else if (command.substr(0, 2) == "lt")
   {
     popSP();
     outf << "D=M" << endl;
@@ -123,7 +136,7 @@ void CodeWriter::writeArithmetic(string command)
     setSP();
     codewriter_ordernumber++;
   }
-  else if (command == "and")
+  else if (command.substr(0, 3) == "and")
   {
     popSP();
     outf << "D=M" << endl;
@@ -131,7 +144,7 @@ void CodeWriter::writeArithmetic(string command)
     outf << "M=M&D" << endl;
     setSP();
   }
-  else if (command == "or")
+  else if (command.substr(0, 2) == "or")
   {
     popSP();
     outf << "D=M" << endl;
@@ -139,7 +152,7 @@ void CodeWriter::writeArithmetic(string command)
     outf << "M=M|D" << endl;
     setSP();
   }
-  else if (command == "not")
+  else if (command.substr(0, 3) == "not")
   {
     popSP();
     outf << "M=!M" << endl;
@@ -330,6 +343,161 @@ void CodeWriter::writePushPop(VMcommands command, string segment, int index)
       cout << "error" << endl;
     }
   }
+}
+
+void CodeWriter::writeLabel(string label)
+{
+  outf << "(" << codewriter_filename << "$" << label << ")" << endl;
+}
+
+void CodeWriter::writeIf(string label)
+{
+  popSP();
+  outf << "D=M" << endl;
+  outf << "@" << codewriter_filename << "$" << label << endl;
+  outf << "D;JNE" << endl;
+}
+
+void CodeWriter::writeGoto(string label)
+{
+  outf << "@" << codewriter_filename << "$" << label << endl;
+  outf << "0;JMP" << endl;
+}
+
+void CodeWriter::writeFunction(string functionName, int numLocals)
+{
+  outf << "(" << functionName << ")" << endl;
+  for (int i = 0; i < numLocals; i++)
+  {
+    writePushPop(C_PUSH, "constant", 0);
+  }
+}
+
+void CodeWriter::writeReturn(void)
+{
+  // 関数の中で関数を使う可能性があるので同じ名前のアドレスを中で定義してはいけない！
+  //　どのようにして別物の名前を定義する？？
+
+  outf << "@LCL" << endl; //address of local
+  outf << "D=M" << endl;
+  outf << "@FRAME" << endl;
+  outf << "M=D" << endl;
+
+  outf << "@5" << endl;
+  outf << "A=D-A" << endl;
+  outf << "D=M" << endl;
+  outf << "@RET" << endl;
+  outf << "M=D" << endl;
+
+  popSP();
+  outf << "D=M" << endl;
+  outf << "@ARG" << endl;
+  outf << "A=M" << endl;
+  outf << "M=D" << endl;
+
+  outf << "@ARG" << endl;
+  outf << "D=M" << endl;
+  outf << "@SP" << endl;
+  outf << "M=D+1" << endl;
+
+  outf << "@FRAME" << endl;
+  outf << "D=M" << endl;
+  outf << "@1" << endl;
+  outf << "A=D-A" << endl;
+  outf << "D=M" << endl;
+  outf << "@THAT" << endl;
+  outf << "M=D" << endl;
+
+  outf << "@FRAME" << endl;
+  outf << "D=M" << endl;
+  outf << "@2" << endl;
+  outf << "A=D-A" << endl;
+  outf << "D=M" << endl;
+  outf << "@THIS" << endl;
+  outf << "M=D" << endl;
+
+  outf << "@FRAME" << endl;
+  outf << "D=M" << endl;
+  outf << "@3" << endl;
+  outf << "A=D-A" << endl;
+  outf << "D=M" << endl;
+  outf << "@ARG" << endl;
+  outf << "M=D" << endl;
+
+  outf << "@FRAME" << endl;
+  outf << "D=M" << endl;
+  outf << "@4" << endl;
+  outf << "A=D-A" << endl;
+  outf << "D=M" << endl;
+  outf << "@LCL" << endl;
+  outf << "M=D" << endl;
+
+  outf << "@RET" << endl;
+  outf << "A=M" << endl;
+  outf << "0;JMP" << endl;
+}
+
+void CodeWriter::writeCall(string functionName, int numLocals)
+{
+  outf << "@RETURN" << codewriter_number << endl;
+  outf << "D=A" << endl;
+  outf << "@SP" << endl;
+  outf << "A=M" << endl;
+  outf << "M=D" << endl;
+  outf << "@SP" << endl;
+  outf << "M=M+1" << endl;
+
+  outf << "@LCL" << endl;
+  outf << "D=M" << endl;
+  outf << "@SP" << endl;
+  outf << "A=M" << endl;
+  outf << "M=D" << endl;
+  outf << "@SP" << endl;
+  outf << "M=M+1" << endl;
+
+  outf << "@ARG" << endl;
+  outf << "D=M" << endl;
+  outf << "@SP" << endl;
+  outf << "A=M" << endl;
+  outf << "M=D" << endl;
+  outf << "@SP" << endl;
+  outf << "M=M+1" << endl;
+
+  outf << "@THIS" << endl;
+  outf << "D=M" << endl;
+  outf << "@SP" << endl;
+  outf << "A=M" << endl;
+  outf << "M=D" << endl;
+  outf << "@SP" << endl;
+  outf << "M=M+1" << endl;
+
+  outf << "@THAT" << endl;
+  outf << "D=M" << endl;
+  outf << "@SP" << endl;
+  outf << "A=M" << endl;
+  outf << "M=D" << endl;
+  outf << "@SP" << endl;
+  outf << "M=M+1" << endl;
+
+  outf << "@SP" << endl;
+  outf << "D=M" << endl;
+  outf << "@5" << endl;
+  outf << "D=D-A" << endl;
+  outf << "@" << to_string(numLocals) << endl;
+  outf << "D=D-A" << endl;
+  outf << "@ARG" << endl;
+  outf << "M=D" << endl;
+
+  outf << "@SP" << endl;
+  outf << "D=M" << endl;
+  outf << "@LCL" << endl;
+  outf << "M=D" << endl;
+
+  outf << "@" << functionName << endl;
+  outf << "0;JMP" << endl;
+
+  outf << "(RETURN" << codewriter_number << ")" << endl;
+  codewriter_number++;
 }
 
 void CodeWriter::popSP(void)

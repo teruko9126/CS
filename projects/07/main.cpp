@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     {
       codewriter1.writePushPop(parser1.commandType(), parser1.arg1(), parser1.arg2());
     }
-    else
+    else if (parser1.commandType() == C_ARITHMETIC)
     {
       codewriter1.writeArithmetic(parser1.arg1());
     }

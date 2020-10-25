@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b85b5ba6-5008-488b-9036-79989bb2304d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/projects/.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/.vscode/tasks.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/07/CodeWriter.dSYM/Contents/Info.plist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/07/CodeWriter.dSYM/Contents/Resources/DWARF/CodeWriter" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/07/code7.dSYM/Contents/Info.plist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/07/code7.dSYM/Contents/Resources/DWARF/code7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/07/main" beforeDir="false" afterPath="$PROJECT_DIR$/projects/07/main" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/07/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/projects/07/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/07/main.dSYM/Contents/Info.plist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/07/main.dSYM/Contents/Resources/DWARF/main" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/08/CodeWriter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/projects/08/CodeWriter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/08/CodeWriter.h" beforeDir="false" afterPath="$PROJECT_DIR$/projects/08/CodeWriter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/08/FunctionCalls/SimpleFunction/SimpleFunction.vm" beforeDir="false" afterPath="$PROJECT_DIR$/projects/08/FunctionCalls/SimpleFunction/SimpleFunction.vm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/08/Parser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/projects/08/Parser.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/08/Parser.h" beforeDir="false" afterPath="$PROJECT_DIR$/projects/08/Parser.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/08/ProgramFlow/BasicLoop/BasicLoop.vm" beforeDir="false" afterPath="$PROJECT_DIR$/projects/08/ProgramFlow/BasicLoop/BasicLoop.vm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm" beforeDir="false" afterPath="$PROJECT_DIR$/projects/08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/08/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/projects/08/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/bin/CPU Emulator.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tools/bin/CPU Emulator.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/bin/Virtual Machine Emulator.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tools/bin/Virtual Machine Emulator.dat" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="4yrqwt5i" />
+  </component>
+  <component name="ProjectId" id="1jLDf991wN9tWzmCvov1yMULDZ1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="power.mode.ii" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b85b5ba6-5008-488b-9036-79989bb2304d" name="Default Changelist" comment="" />
+      <created>1603574579519</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603574579519</updated>
+      <workItem from="1603574581309" duration="169000" />
+      <workItem from="1603574768611" duration="138000" />
+      <workItem from="1603574931084" duration="456000" />
+      <workItem from="1603575422976" duration="380000" />
+      <workItem from="1603575826773" duration="225000" />
+      <workItem from="1603576099754" duration="91000" />
+      <workItem from="1603576207240" duration="2734000" />
+      <workItem from="1603611189414" duration="2327000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="319" y="71" key="#C/C++" timestamp="1603612619278">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="319" y="71" key="#C/C++/0.0.1440.900@0.0.1440.900" timestamp="1603612619278" />
+    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1603575297919">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="184" y="112" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1603575297919" />
+    <state x="97" y="81" key="SettingsEditor" timestamp="1603613693656">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="221" y="89" key="SettingsEditor/0.0.1440.900/926.-877.1600.877@0.0.1440.900" timestamp="1603576505407" />
+    <state x="221" y="89" key="SettingsEditor/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1603576484862" />
+    <state x="97" y="81" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1603613693656" />
+    <state x="479" y="324" width="558" height="270" key="org.intellij.images.editor.actions.BackgroundImageDialog" timestamp="1603575183098">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="479" y="324" width="558" height="270" key="org.intellij.images.editor.actions.BackgroundImageDialog/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1603575183098" />
+    <state x="384" y="209" key="run.anything.popup" timestamp="1603575546544">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="384" y="209" key="run.anything.popup/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1603575546544" />
+  </component>
+</project>
