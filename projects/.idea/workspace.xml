@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ba178213-d342-4bd1-b39d-921670b87abc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/10/JackAnalyzer.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/10/preexec.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/08/Parser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/08/Parser.cpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="ProjectId" id="1jOos66Cy3sGFZmE62Ss38l5znk" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.prettier.on.save" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/10/ArrayTest/MainT.xml" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ba178213-d342-4bd1-b39d-921670b87abc" name="Default Changelist" comment="" />
+      <created>1603684702771</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1603684702771</updated>
+      <workItem from="1603684703912" duration="992000" />
+      <workItem from="1603685751168" duration="612000" />
+      <workItem from="1603686372077" duration="2228000" />
+      <workItem from="1603692875167" duration="25007000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="complete tokenizer" />
+    <option name="LAST_COMMIT_MESSAGE" value="complete tokenizer" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="520" y="293" key="#Scopes" timestamp="1604051273469">
+      <screen x="0" y="23" width="1440" height="814" />
+    </state>
+    <state x="520" y="293" key="#Scopes/0.23.1440.814@0.23.1440.814" timestamp="1604051273469" />
+    <state x="184" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604045371327">
+      <screen x="0" y="23" width="1440" height="814" />
+    </state>
+    <state x="184" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.814@0.23.1440.814" timestamp="1604045371327" />
+    <state x="428" y="228" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604046214984">
+      <screen x="0" y="23" width="1440" height="814" />
+    </state>
+    <state x="428" y="228" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.814@0.23.1440.814" timestamp="1604046214984" />
+    <state x="461" y="313" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1604045472780">
+      <screen x="0" y="23" width="1440" height="814" />
+    </state>
+    <state x="461" y="313" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.1440.814@0.23.1440.814" timestamp="1604045472780" />
+    <state x="100" y="123" width="1240" height="610" key="DiffContextDialog" timestamp="1604052178116">
+      <screen x="0" y="23" width="1440" height="816" />
+    </state>
+    <state x="100" y="123" width="1240" height="610" key="DiffContextDialog/0.23.1440.816@0.23.1440.816" timestamp="1604052178116" />
+    <state x="84" y="60" key="SettingsEditor" timestamp="1604051697179">
+      <screen x="0" y="23" width="1440" height="816" />
+    </state>
+    <state x="69" y="78" key="SettingsEditor/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1603693129835" />
+    <state x="69" y="78" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1603687034551" />
+    <state x="84" y="60" key="SettingsEditor/0.23.1440.814/926.-877.1600.877@0.23.1440.814" timestamp="1603693759065" />
+    <state x="84" y="60" key="SettingsEditor/0.23.1440.814@0.23.1440.814" timestamp="1604051022750" />
+    <state x="84" y="60" key="SettingsEditor/0.23.1440.816@0.23.1440.816" timestamp="1604051697179" />
+    <state x="320" y="164" key="Vcs.Push.Dialog.v2" timestamp="1604053216077">
+      <screen x="0" y="23" width="1440" height="814" />
+    </state>
+    <state x="320" y="164" key="Vcs.Push.Dialog.v2/0.23.1440.814@0.23.1440.814" timestamp="1604053216077" />
+    <state x="516" y="345" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604053157283">
+      <screen x="0" y="23" width="1440" height="814" />
+    </state>
+    <state x="516" y="345" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.814@0.23.1440.814" timestamp="1604053157283" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1604050283817">
+      <screen x="0" y="23" width="1440" height="814" />
+    </state>
+    <state x="385" y="191" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1603686242687" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.23.1440.814@0.23.1440.814" timestamp="1604050283817" />
+  </component>
+</project>

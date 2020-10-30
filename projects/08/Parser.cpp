@@ -11,7 +11,7 @@ Parser::Parser(string filename)
     parser_filename = filename.substr(parser_lastslash + 1);
     if (inf.is_open())
     {
-        inf.close();
+      inf.close();
     }
     inf.open(filename.c_str());
     if (!inf.is_open())
