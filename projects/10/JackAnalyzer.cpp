@@ -5,10 +5,6 @@
 #include <iostream>
 #include <cctype>
 
-//main.jackを読み込んでtokenizerのためのファイルであるmainpre.jackを作成する
-//maintokenizer.jackをjacktokenizerで読み込む
-//最終的な結果としてmain.xmlを作成する
-
 int main(int argc, char *argv[]) {
   string filename = argv[1];
   // .jack付ける

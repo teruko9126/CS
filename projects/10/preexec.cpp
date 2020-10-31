@@ -30,19 +30,18 @@ void preexec::advance() {
 
 void preexec::findsymbol() {
   int num = 0;
-  while(preexec_current.find("//") != -1 || preexec_current.find("/**") != -1 || preexec_current.find("/*") != -1){
-    cout << preexec_current << num++ << endl;
-    advance();
+  int find1 = preexec_current.find("//");
+  if(find1 != -1){
+    preexec_current = preexec_current.substr(0,find1);
   }
 
-  if(preexec_current.find("/*") != -1){
+  if(preexec_current.find("/**") != -1){
     while(preexec_current.find("*/") == -1){
       advance();
     }
     advance();
   }
   for (int i = 0; i < preexec_current.size(); i++) {
-    cout << preexec_current << endl;
     if (preexec_current[i] == '{' || preexec_current[i] == '}' || preexec_current[i] == '(' ||
         preexec_current[i] == ')' || preexec_current[i] == '[' || preexec_current[i] == ']' ||
         preexec_current[i] == '.' || preexec_current[i] == ',' || preexec_current[i] == ';' ||
