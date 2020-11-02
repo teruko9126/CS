@@ -27,7 +27,18 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="016330bd-9a2f-40ca-8b8b-4a064b2006c1" name="Default Changelist" comment="" />
+    <list default="true" id="016330bd-9a2f-40ca-8b8b-4a064b2006c1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArrayTest/Maintoken.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ArrayTest/Maintoken.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CompilationEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CompilationEngine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CompilationEngine.h" beforeDir="false" afterPath="$PROJECT_DIR$/CompilationEngine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JackAnalyzer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/JackAnalyzer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JackTokenizer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/JackTokenizer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JackTokenizer.h" beforeDir="false" afterPath="$PROJECT_DIR$/JackTokenizer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main" beforeDir="false" afterPath="$PROJECT_DIR$/main" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.dSYM/Contents/Resources/DWARF/main" beforeDir="false" afterPath="$PROJECT_DIR$/main.dSYM/Contents/Resources/DWARF/main" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,7 +61,23 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/Square/SquareGame.xml" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -61,6 +88,7 @@
       <option name="presentableId" value="Default" />
       <updated>1603684559289</updated>
       <workItem from="1603684560476" duration="142000" />
+      <workItem from="1604217698364" duration="11959000" />
     </task>
     <servers />
   </component>
@@ -77,5 +105,21 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="461" y="275" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1604231234165">
+      <screen x="0" y="23" width="1440" height="816" />
+    </state>
+    <state x="461" y="275" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.1440.816@0.23.1440.816" timestamp="1604231234165" />
+    <state x="102" y="100" width="1240" height="700" key="DiffContextDialog" timestamp="1604232115967">
+      <screen x="0" y="23" width="1440" height="816" />
+    </state>
+    <state x="102" y="100" width="1240" height="700" key="DiffContextDialog/0.23.1440.814@0.23.1440.814" timestamp="1604230256353" />
+    <state x="102" y="100" width="1240" height="700" key="DiffContextDialog/0.23.1440.816@0.23.1440.816" timestamp="1604232115967" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1604223862723">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1604223862723" />
   </component>
 </project>
