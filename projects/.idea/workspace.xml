@@ -27,32 +27,21 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ba178213-d342-4bd1-b39d-921670b87abc" name="Default Changelist" comment="complete tokenizer ver2">
-      <change afterPath="$PROJECT_DIR$/11/CompilationEngine.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/CompilationEngine.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/JackAnalyzer.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/JackCompiler.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/JackCompiler.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/JackTokenizer.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/JackTokenizer.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/SymbolTable.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/SymbolTable.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/VMWriter.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/VMWriter.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/main" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/preexec.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/11/preexec.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+    <list default="true" id="ba178213-d342-4bd1-b39d-921670b87abc" name="Default Changelist" comment="project10 completed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/10/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/ArrayTest/Maintoken.xml" beforeDir="false" afterPath="$PROJECT_DIR$/10/ArrayTest/Maintoken.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/CompilationEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/10/CompilationEngine.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/CompilationEngine.h" beforeDir="false" afterPath="$PROJECT_DIR$/10/CompilationEngine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/JackAnalyzer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/10/JackAnalyzer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/JackTokenizer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/10/JackTokenizer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/JackTokenizer.h" beforeDir="false" afterPath="$PROJECT_DIR$/10/JackTokenizer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/main" beforeDir="false" afterPath="$PROJECT_DIR$/10/main" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/10/main.dSYM/Contents/Resources/DWARF/main" beforeDir="false" afterPath="$PROJECT_DIR$/10/main.dSYM/Contents/Resources/DWARF/main" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/CompilationEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/11/CompilationEngine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/CompilationEngine.h" beforeDir="false" afterPath="$PROJECT_DIR$/11/CompilationEngine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/JackCompiler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/11/JackCompiler.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/JackCompiler.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/JackTokenizer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/11/JackTokenizer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/JackTokenizer.h" beforeDir="false" afterPath="$PROJECT_DIR$/11/JackTokenizer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/SymbolTable.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/11/SymbolTable.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/SymbolTable.h" beforeDir="false" afterPath="$PROJECT_DIR$/11/SymbolTable.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/VMWriter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/11/VMWriter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/VMWriter.h" beforeDir="false" afterPath="$PROJECT_DIR$/11/VMWriter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/preexec.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/11/preexec.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/11/preexec.h" beforeDir="false" afterPath="$PROJECT_DIR$/11/preexec.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tools/bin/Virtual Machine Emulator.dat" beforeDir="false" afterPath="$PROJECT_DIR$/../tools/bin/Virtual Machine Emulator.dat" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +80,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.prettier.on.save" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
+    <property name="settings.editor.selected.configurable" value="preferences.toDoOptions" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/10/Square/SquareGameT.xml" />
   </component>
   <component name="RecentsManager">
@@ -100,9 +89,9 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -119,7 +108,8 @@
       <workItem from="1603686372077" duration="2228000" />
       <workItem from="1603692875167" duration="31536000" />
       <workItem from="1604197371630" duration="10808000" />
-      <workItem from="1604232728396" duration="1938000" />
+      <workItem from="1604232728396" duration="2435000" />
+      <workItem from="1604341363550" duration="38950000" />
     </task>
     <task id="LOCAL-00001" summary="complete tokenizer">
       <created>1604053405735</created>
@@ -135,7 +125,21 @@
       <option name="project" value="LOCAL" />
       <updated>1604115101782</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="project10 completed">
+      <created>1604281464798</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1604281464798</updated>
+    </task>
+    <task id="LOCAL-00004" summary="project10 completed">
+      <created>1604281477710</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1604281477710</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -156,7 +160,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="complete tokenizer" />
     <MESSAGE value="complete tokenizer ver2" />
-    <option name="LAST_COMMIT_MESSAGE" value="complete tokenizer ver2" />
+    <MESSAGE value="project10 completed" />
+    <option name="LAST_COMMIT_MESSAGE" value="project10 completed" />
   </component>
   <component name="WindowStateProjectService">
     <state x="520" y="293" key="#Scopes" timestamp="1604051273469">
@@ -167,9 +172,10 @@
       <screen x="0" y="23" width="1440" height="814" />
     </state>
     <state x="184" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.814@0.23.1440.814" timestamp="1604045371327" />
-    <state x="428" y="228" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604046214984">
-      <screen x="0" y="23" width="1440" height="814" />
+    <state x="428" y="227" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604580800870">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="428" y="227" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1604580800870" />
     <state x="428" y="228" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.814@0.23.1440.814" timestamp="1604046214984" />
     <state x="461" y="313" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1604045472780">
       <screen x="0" y="23" width="1440" height="814" />
@@ -181,31 +187,34 @@
     <state x="20" y="137" width="1240" height="609" key="DiffContextDialog/0.23.1440.814/926.-877.1600.877@0.23.1440.814" timestamp="1604115300839" />
     <state x="20" y="137" width="1240" height="609" key="DiffContextDialog/0.23.1440.814@0.23.1440.814" timestamp="1604114816620" />
     <state x="100" y="123" width="1240" height="610" key="DiffContextDialog/0.23.1440.816@0.23.1440.816" timestamp="1604052178116" />
-    <state x="84" y="60" key="SettingsEditor" timestamp="1604051697179">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state x="328" y="23" key="SettingsEditor" timestamp="1604554878479">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="69" y="78" key="SettingsEditor/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1603693129835" />
-    <state x="69" y="78" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1603687034551" />
+    <state x="69" y="78" key="SettingsEditor/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1604395376147" />
+    <state x="328" y="23" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1604554878479" />
     <state x="84" y="60" key="SettingsEditor/0.23.1440.814/926.-877.1600.877@0.23.1440.814" timestamp="1603693759065" />
     <state x="84" y="60" key="SettingsEditor/0.23.1440.814@0.23.1440.814" timestamp="1604051022750" />
     <state x="84" y="60" key="SettingsEditor/0.23.1440.816@0.23.1440.816" timestamp="1604051697179" />
-    <state x="320" y="164" key="Vcs.Push.Dialog.v2" timestamp="1604115108248">
-      <screen x="0" y="23" width="1440" height="814" />
+    <state x="320" y="156" key="Vcs.Push.Dialog.v2" timestamp="1604281484000">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="320" y="156" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1604281484000" />
     <state x="320" y="164" key="Vcs.Push.Dialog.v2/0.23.1440.814/926.-877.1600.877@0.23.1440.814" timestamp="1604115108248" />
     <state x="320" y="164" key="Vcs.Push.Dialog.v2/0.23.1440.814@0.23.1440.814" timestamp="1604053216077" />
     <state x="516" y="345" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604053157283">
       <screen x="0" y="23" width="1440" height="814" />
     </state>
     <state x="516" y="345" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.814@0.23.1440.814" timestamp="1604053157283" />
-    <state x="350" y="194" key="run.anything.popup" timestamp="1604115049062">
-      <screen x="0" y="23" width="1440" height="814" />
+    <state x="350" y="189" key="run.anything.popup" timestamp="1604341090134">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="350" y="189" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1604341090134" />
     <state x="350" y="194" key="run.anything.popup/0.23.1440.814/926.-877.1600.877@0.23.1440.814" timestamp="1604115049062" />
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1604050283817">
-      <screen x="0" y="23" width="1440" height="814" />
+    <state x="385" y="191" width="670" height="676" key="search.everywhere.popup" timestamp="1604592763369">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="385" y="191" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1603686242687" />
+    <state x="385" y="191" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/926.-900.1600.900@0.0.1440.900" timestamp="1604592763369" />
+    <state x="385" y="191" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1604560589467" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.23.1440.814@0.23.1440.814" timestamp="1604050283817" />
   </component>
 </project>

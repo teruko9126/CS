@@ -1,5 +1,4 @@
 #include "CompilationEngine.h"
-#include "JackTokenizer.h"
 #include <fstream>
 #include <string>
 #include <iostream>
@@ -7,14 +6,12 @@
 
 using namespace std;
 
-int num = 0;
-
-CompilationEngine::CompilationEngine(JackTokenizer *tokenizer, string filename) {
+CompilationEngine::CompilationEngine(JackTokenizer *tokenizer, Symboltable *symboltable, VMWriter *vmwriter,
+                                     string filename) {
   current_filename = filename;
-  int dot = current_filename.find(".");
-  filename = filename.substr(0, dot) + "complete.xml";
-  outf.open(filename.c_str());
-  current_tokenizer = tokenizer;
+  TOKEN = tokenizer;
+  SYM = symboltable;
+  VM = vmwriter;
   compileClass();
 }
 
@@ -25,135 +22,196 @@ CompilationEngine::~CompilationEngine() {
 }
 
 void CompilationEngine::compileClass() {
-  getempty();
-  outf << "<class>" << endl;
-  num++;
-  current_tokenizer->advance();
-  outkeyword(); //class
-  no_compileClassName();
-  outsymbol();
-  while (current_tokenizer->keyWord() == STATIC || current_tokenizer->keyWord() == FIELD) {
+
+  TOKEN->advance();
+
+  assert(TOKEN->keyWord() == CLASS);
+  TOKEN->advance();
+
+  assert(TOKEN->tokenType() == IDENTIFIER);
+  classname = TOKEN->identifier();
+  TOKEN->advance();
+
+  assert(TOKEN->symbol() == "{");
+  TOKEN->advance();
+
+  while (TOKEN->keyWord() == STATIC || TOKEN->keyWord() == FIELD) {
     compileClassVarDec();
   }
-  while (current_tokenizer->keyWord() == CONSTRUCTOR || current_tokenizer->keyWord() == FUNCTION ||
-         current_tokenizer->keyWord() == METHOD) {
+  while (TOKEN->keyWord() == CONSTRUCTOR || TOKEN->keyWord() == FUNCTION ||
+         TOKEN->keyWord() == METHOD) {
     compileSubroutine();
   }
-  outsymbol();
-  num--;
-  getempty();
-  outf << "</class>" << endl;
+
+  assert(TOKEN->symbol() == "}");
 }
 
 void CompilationEngine::compileClassVarDec() {
-  getempty();
-  outf << "<classVarDec>" << endl;
-  num++;
-  outkeyword();
-  no_compileType();
-  no_compileVarName();
-  while (current_tokenizer->symbol() == ",") {
-    outsymbol();
-    no_compileVarName();
+
+  string name, type;
+  symboltable::Kind kind = CEhelper::keyword2kind(TOKEN->keyWord());
+  TOKEN->advance();
+
+  if (TOKEN->tokenType() == KEYWORD) {
+    type = CEhelper::keyword2string(TOKEN->keyWord());
+  }else if(TOKEN->tokenType() == IDENTIFIER){
+    type = TOKEN->identifier();
   }
-  outsymbol();
-  num--;
-  getempty();
-  outf << "</classVarDec>" << endl;
+
+  TOKEN->advance();
+  while (TOKEN->symbol() != ";") {
+    switch (TOKEN->tokenType()){
+      case SYMBOL:
+        assert(TOKEN->symbol() == ",");
+        TOKEN->advance();
+        break;
+      case IDENTIFIER:
+        name = TOKEN->identifier();
+        SYM->define(name,type,kind);
+        TOKEN->advance();
+        break;
+    }
+  }
+
+  assert(TOKEN->symbol() == ";");
+  TOKEN->advance();
 }
 
 void CompilationEngine::compileSubroutine() {
-  getempty();
-  outf << "<subroutineDec>" << endl;
-  num++;
-  outkeyword();
-  if (current_tokenizer->keyWord() == VOID) {
-    outkeyword();
-  } else {
-    no_compileType();
+
+  SYM->startSubroutine();
+
+  subroutineType = TOKEN->keyWord();
+  //if(subroutineType == METHOD)
+  //TODOここ以降よくわからん！！！！！！！(181行以降)どうしてthisで置いている？？？
+  TOKEN->advance();
+
+  string returntype; //のちに返り値について考えるときに使う
+  if(TOKEN->tokenType() == KEYWORD){
+    returntype = CEhelper::keyword2string(TOKEN->keyWord());
+  }else if(TOKEN->tokenType() == IDENTIFIER){
+    returntype = TOKEN->identifier();
   }
-  no_compileSubroutineName();
-  outsymbol();
+  TOKEN->advance();
+
+  assert(TOKEN->tokenType() == IDENTIFIER);
+  subroutinename = classname + "." + TOKEN->identifier();
+  TOKEN->advance();
+
+  assert(TOKEN->symbol() == "(");
+  TOKEN->advance();
+
   compileParameterList();
-  outsymbol();
+
+  assert(TOKEN->symbol() == ")");
+  TOKEN->advance();
+
   compileSubroutineBody();
-  num--;
-  getempty();
-  outf << "</subroutineDec>" << endl;
 }
 
 void CompilationEngine::compileParameterList() {
-  getempty();
-  outf << "<parameterList>" << endl;
-  num++;
-  if (current_tokenizer->keyWord() == INT || current_tokenizer->keyWord() == CHAR ||
-      current_tokenizer->keyWord() == BOOLEAN || current_tokenizer->tokenType() == IDENTIFIER) {
-    no_compileType();
-    no_compileVarName();
-    while (current_tokenizer->symbol() != ")") {
-      outsymbol();
-      no_compileType();
-      no_compileVarName();
+  string name,type;
+  symboltable::Kind kind = symboltable::ARG;
+  bool truetype = true;
+  while(TOKEN->symbol() != ")") {
+    switch (TOKEN->tokenType()) {
+      case KEYWORD:
+        type = CEhelper::keyword2string(TOKEN->keyWord());
+        truetype = false;
+        TOKEN->advance();
+        break;
+      case IDENTIFIER:
+        if (truetype) {
+          type = TOKEN->identifier();
+          truetype = false;
+        } else {
+          name = TOKEN->identifier();
+          SYM->define(name, type, kind);
+          truetype = true;
+        }
+        TOKEN->advance();
+        break;
     }
   }
-  num--;
-  getempty();
-  outf << "</parameterList>" << endl;
 }
 
 void CompilationEngine::compileSubroutineBody() {
-  getempty();
-  outf << "<subroutineBody>" << endl;
-  num++;
-  outsymbol();
-  while (current_tokenizer->keyWord() == VAR) {
+  assert(TOKEN->symbol() == "{");
+  TOKEN->advance();
+
+  while (TOKEN->keyWord() == VAR)
     compileVarDec();
-  }
+
+  int nLocals = SYM->VarCount(symboltable::VAR);
+
+  VM->writeFunction(subroutinename,nLocals);
+
+  //TODO constructorとmethodの中身についてはあとで例を見ながら実装！！
+
   compileStatements();
-  outsymbol();
-  num--;
-  getempty();
-  outf << "</subroutineBody>" << endl;
+
+  assert(TOKEN->symbol() == "}");
+  TOKEN->advance();
 }
 
 void CompilationEngine::compileVarDec() {
-  getempty();
-  outf << "<varDec>" << endl;
-  num++;
-  outkeyword();
-  no_compileType();
-  no_compileVarName();
-  while (current_tokenizer->symbol() == ",") {
-    outsymbol();
-    no_compileVarName();
+  string name,type;
+  symboltable::Kind kind = symboltable::VAR;
+
+  assert(TOKEN->keyWord() == VAR);
+  TOKEN->advance();
+
+  //this define type
+  if(TOKEN->tokenType() == KEYWORD){
+    type = CEhelper::keyword2string(TOKEN->keyWord());
+  }else if(TOKEN->tokenType() == IDENTIFIER){
+    type = TOKEN->identifier();
   }
-  outsymbol();// ;
-  num--;
-  getempty();
-  outf << "</varDec>" << endl;
+  TOKEN->advance();
+
+  while(TOKEN->getcurrentcommand() != ";") {
+    switch (TOKEN->tokenType()) {
+      case SYMBOL:
+        assert(TOKEN->symbol() == ",");
+        TOKEN->advance();
+        break;
+      case IDENTIFIER:
+        name = TOKEN->identifier();
+        SYM->define(name, type, kind);
+        TOKEN->advance();
+        break;
+    }
+  }
+    assert(TOKEN->symbol() == ";");
+    TOKEN->advance();
 }
 
 void CompilationEngine::compileStatements() {
-  getempty();
-  outf << "<statements>" << endl;
-  num++;
-  while (current_tokenizer->keyWord() == LET || current_tokenizer->keyWord() == IF ||
-         current_tokenizer->keyWord() == WHILE || current_tokenizer->keyWord() == DO ||
-         current_tokenizer->keyWord() == RETURN) {
-    no_compileStatement();
+  while(TOKEN->keyWord() == LET || TOKEN->keyWord() == IF || TOKEN->keyWord() == WHILE || TOKEN->keyWord() == DO || TOKEN->keyWord() == RETURN){
+    switch(TOKEN->keyWord()) {
+      case LET:
+        compileLet();
+        break;
+      case IF:
+        compileIf();
+        break;
+      case WHILE:
+        compileWhile();
+        break;
+      case DO:
+        compileDo();
+        break;
+      case RETURN:
+        compileReturn();
+        break;
+    }
   }
-  num--;
-  getempty();
-  outf << "</statements>" << endl;
 }
 
 void CompilationEngine::compileLet() {
-  getempty();
-  outf << "<letStatement>" << endl;
-  num++;
   outkeyword();
   no_compileVarName();
-  if (current_tokenizer->symbol() == "[") {
+  if (TOKEN->symbol() == "[") {
     outsymbol();
     compileExpression();
     outsymbol();//"]"
@@ -161,15 +219,9 @@ void CompilationEngine::compileLet() {
   outsymbol();
   compileExpression();
   outsymbol();
-  num--;
-  getempty();
-  outf << "</letStatement>" << endl;
 }
 
 void CompilationEngine::compileIf() {
-  getempty();
-  outf << "<ifStatement>" << endl;
-  num++;
   outkeyword(); // if
   outsymbol(); // (
   compileExpression();
@@ -177,21 +229,15 @@ void CompilationEngine::compileIf() {
   outsymbol(); // {
   compileStatements();
   outsymbol(); // }
-  if (current_tokenizer->keyWord() == ELSE) {
+  if (TOKEN->keyWord() == ELSE) {
     outkeyword(); // else
     outsymbol(); // {
     compileStatements();
     outsymbol(); // }
   }
-  num--;
-  getempty();
-  outf << "</ifStatement>" << endl;
 }
 
 void CompilationEngine::compileWhile() {
-  getempty();
-  outf << "<whileStatement>" << endl;
-  num++;
   outkeyword(); //while
   outsymbol(); // (
   compileExpression();
@@ -199,125 +245,135 @@ void CompilationEngine::compileWhile() {
   outsymbol(); // {
   compileStatements();
   outsymbol(); // }
-  num--;
-  getempty();
-  outf << "</whileStatement>" << endl;
 }
 
 void CompilationEngine::compileDo() {
-  getempty();
-  outf << "<doStatement>" << endl;
-  num++;
-  outkeyword(); // do
-  no_compileSubroutineCall();
-  outsymbol(); // ;
-  num--;
-  getempty();
-  outf << "</doStatement>" << endl;
+  assert(TOKEN->keyWord() == DO);
+  TOKEN->advance();
+
+  string name1 = TOKEN->identifier();
+  TOKEN->advance();
+
+  if(TOKEN->symbol() == "("){
+    TOKEN->advance();
+
+    //TODO　なぜpointerをpushする？？？？？今はまだここ通らないのでスルーする
+  }else if(TOKEN->symbol() == "."){
+    TOKEN->advance();
+
+    string name2 = TOKEN->identifier();
+    TOKEN->advance();
+    //TODOなんだこいつ？？？？？？
+    if(SYM->kindOf(name1) != symboltable::NONE){
+
+    }else{
+      assert(TOKEN->symbol() == "(");
+      TOKEN->advance();
+
+      compileExpressionList();
+      VM->writeCall(name1 + "." + name2,numArgs);
+      numArgs = 0;
+
+      assert(TOKEN->symbol() == ")");
+      TOKEN->advance();
+    }
+  }
+
+  //TODO pop temp は必要か？？
+
+  assert(TOKEN->symbol() == ";");
+  TOKEN->advance();
 }
 
 void CompilationEngine::compileReturn() {
-  getempty();
-  outf << "<returnStatement>" << endl;
-  num++;
-  outkeyword(); // return
-  if (current_tokenizer->getcurrentcommand() != ";") {
+  assert(TOKEN->keyWord() == RETURN);
+  TOKEN->advance();
+
+  if(TOKEN->getcurrentcommand() != ";"){
     compileExpression();
   }
-  outsymbol(); // ;
-  num--;
-  getempty();
-  outf << "</returnStatement>" << endl;
-}
 
-void CompilationEngine::compileExpression() {
-  getempty();
-  outf << "<expression>" << endl;
-  num++;
-  compileTerm();
-  while (current_tokenizer->getcurrentcommand() == "+" || current_tokenizer->getcurrentcommand() == "-" ||
-         current_tokenizer->getcurrentcommand() == "*" || current_tokenizer->getcurrentcommand() == "/" ||
-         current_tokenizer->getcurrentcommand() == "&" || current_tokenizer->getcurrentcommand() == "|" ||
-         current_tokenizer->getcurrentcommand() == "<" || current_tokenizer->getcurrentcommand() == ">" ||
-         current_tokenizer->getcurrentcommand() == "=") {
-    no_compileOp();
-    compileTerm();
-  }
-  num--;
-  getempty();
-  outf << "</expression>" << endl;
-}
+  VM->writeReturn();
 
-void CompilationEngine::compileTerm() {
-  getempty();
-  outf << "<term>" << endl;
-  num++;
-  if (current_tokenizer->tokenType() == INT_CONST) {
-    outinteger();
-  } else if (current_tokenizer->tokenType() == STRING_CONST) {
-    outstring();
-  } else if (current_tokenizer->tokenType() == KEYWORD) {
-    outkeyword();
-  } else if (current_tokenizer->tokenType() == IDENTIFIER) {
-    outidentifier();
-    if (current_tokenizer->symbol() == "[") {
-      outsymbol();
-      compileExpression();
-      outsymbol(); // ]
-    } else if (current_tokenizer->symbol() == "(" || current_tokenizer->symbol() == ".") { //subroutinename
-      if (current_tokenizer->symbol() == "(") {
-        outsymbol();
-        compileExpressionList();
-        outsymbol(); // ;
-      } else if (current_tokenizer->symbol() == ".") {
-        outsymbol();
-        no_compileSubroutineName();
-        outsymbol(); // (
-        compileExpressionList();
-        outsymbol(); // )
-      }
-    }
-  } else if (current_tokenizer->symbol() == "(") {
-    outsymbol();
-    compileExpression();
-    outsymbol(); // )
-  } else if (current_tokenizer->tokenType() == SYMBOL) {
-    no_compileUnaryOp();
-    compileTerm();
-  }
-  num--;
-  getempty();
-  outf << "</term>" << endl;
-
+  assert(TOKEN->symbol() == ";");
+  TOKEN->advance();
 }
 
 void CompilationEngine::compileExpressionList() {
-  getempty();
-  outf << "<expressionList>" << endl;
-  num++;
-  if (current_tokenizer->getcurrentcommand() != ")") {
+  if (TOKEN->getcurrentcommand() != ")") {
     compileExpression();
+    numArgs++;
 
-    while (current_tokenizer->symbol() == ",") {
-      outsymbol();
+    while (TOKEN->symbol() == ",") {
+      TOKEN->advance();
+
       compileExpression();
+      numArgs++;
     }
   }
-  num--;
-  getempty();
-  outf << "</expressionList>" << endl;
+}
+
+void CompilationEngine::compileExpression() {
+  compileTerm();
+  while (TOKEN->getcurrentcommand() == "+" || TOKEN->getcurrentcommand() == "-" ||
+         TOKEN->getcurrentcommand() == "*" || TOKEN->getcurrentcommand() == "/" ||
+         TOKEN->getcurrentcommand() == "&" || TOKEN->getcurrentcommand() == "|" ||
+         TOKEN->getcurrentcommand() == "<" || TOKEN->getcurrentcommand() == ">" ||
+         TOKEN->getcurrentcommand() == "="){
+
+    string op = TOKEN->symbol();
+    TOKEN->advance();
+
+    compileTerm();
+    if(op == "+") VM->writeArithmetic(vmwriter::ADD);
+    else if(op == "-") VM->writeArithmetic(vmwriter::SUB);
+    else if(op == "*") VM->writeCall("Math.multiply",2);
+    else if(op == "/") VM->writeCall("Math.divide",2);
+    else if(op == "&") VM->writeArithmetic(vmwriter::AND);
+    else if(op == "|") VM->writeArithmetic(vmwriter::OR);
+    else if(op == "<") VM->writeArithmetic(vmwriter::LT);
+    else if(op == ">") VM->writeArithmetic(vmwriter::GT);
+    else if(op == "=") VM->writeArithmetic(vmwriter::EQ);
+    else if(op == "~") VM->writeArithmetic(vmwriter::NOT);
+  }
+}
+
+void CompilationEngine::compileTerm() {
+  switch (TOKEN->tokenType()) {
+    case KEYWORD:
+      break;
+    case SYMBOL:
+      if(TOKEN->symbol() == "("){
+        TOKEN->advance();
+
+        compileExpression();
+
+        assert(TOKEN->symbol() == ")");
+        TOKEN->advance();
+      }
+      break;
+    case INT_CONST:
+      VM->writePush(vmwriter::CONST,TOKEN->intVal());
+      TOKEN->advance();
+      break;
+    case STRING_CONST:
+      break;
+    case IDENTIFIER:
+      break;
+  }
 }
 
 void CompilationEngine::no_compileType() {
-  if (current_tokenizer->tokenType() == KEYWORD) {
+  if (TOKEN->tokenType() == KEYWORD) {
     outkeyword();
-  } else if (current_tokenizer->tokenType() == IDENTIFIER) {
+  } else if (TOKEN->tokenType() == IDENTIFIER) {
     outidentifier();
   }
 }
 
 void CompilationEngine::no_compileClassName() {
-  outidentifier();
+  classname = TOKEN->identifier();
+  TOKEN->advance();
 }
 
 void CompilationEngine::no_compileVarName() {
@@ -329,19 +385,19 @@ void CompilationEngine::no_compileSubroutineName() {
 }
 
 void CompilationEngine::no_compileStatement() {
-  if (current_tokenizer->keyWord() == LET) {
+  if (TOKEN->keyWord() == LET) {
     compileLet();
   }
-  if (current_tokenizer->keyWord() == IF) {
+  if (TOKEN->keyWord() == IF) {
     compileIf();
   }
-  if (current_tokenizer->keyWord() == WHILE) {
+  if (TOKEN->keyWord() == WHILE) {
     compileWhile();
   }
-  if (current_tokenizer->keyWord() == DO) {
+  if (TOKEN->keyWord() == DO) {
     compileDo();
   }
-  if (current_tokenizer->keyWord() == RETURN) {
+  if (TOKEN->keyWord() == RETURN) {
     compileReturn();
   }
 }
@@ -363,7 +419,7 @@ void CompilationEngine::no_compileSubroutineCall() {
   //maybe this isn't subroutineName, this is classname or varname
   //but all of this is identifier ,so it's ok
 
-  if (current_tokenizer->symbol() == ".") {
+  if (TOKEN->symbol() == ".") {
     outsymbol();
     no_compileSubroutineName();
   }
@@ -372,41 +428,31 @@ void CompilationEngine::no_compileSubroutineCall() {
   outsymbol(); // )
 }
 
-void CompilationEngine::getempty() {
-  for (int i = 0; i < num; i++) {
-    outf << "  ";
-  }
-}
-
 void CompilationEngine::outkeyword() {
-  getempty();
-  outf << "<keyword> " << current_tokenizer->keyword2command(current_tokenizer->keyWord()) << " </keyword>" << endl;
-  current_tokenizer->advance();
+  outf << "<keyword> " << TOKEN->keyword2command(TOKEN->keyWord()) << " </keyword>" << endl;
+  TOKEN->advance();
 }
 
 void CompilationEngine::outsymbol() {
-  getempty();
-  outf << "<symbol> " << current_tokenizer->symbol() << " </symbol>" << endl;
-  current_tokenizer->advance();
+  outf << "<symbol> " << TOKEN->symbol() << " </symbol>" << endl;
+  TOKEN->advance();
 }
 
 void CompilationEngine::outinteger() {
-  getempty();
-  outf << "<integerConstant> " << current_tokenizer->intVal() << " </integerConstant>" << endl;
-  current_tokenizer->advance();
+  outf << "<integerConstant> " << TOKEN->intVal() << " </integerConstant>" << endl;
+  TOKEN->advance();
 }
 
 void CompilationEngine::outstring() {
-  getempty();
-  outf << "<stringConstant> " << current_tokenizer->stringVal() << " </stringConstant>" << endl;
-  current_tokenizer->advance();
+  outf << "<stringConstant> " << TOKEN->stringVal() << " </stringConstant>" << endl;
+  TOKEN->advance();
 }
 
 void CompilationEngine::outidentifier() {
-  getempty();
-  outf << "<identifier> " << current_tokenizer->identifier() << " </identifier>" << endl;
-  current_tokenizer->advance();
+  outf << "<identifier> " << TOKEN->identifier() << " </identifier>" << endl;
+  TOKEN->advance();
 }
+
 
 
 

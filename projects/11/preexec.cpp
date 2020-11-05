@@ -1,8 +1,4 @@
-#include <iostream>
-#include <string>
-#include <fstream>
 #include "preexec.h"
-#include <vector>
 
 using namespace std;
 

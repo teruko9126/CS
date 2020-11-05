@@ -1,8 +1,4 @@
 #include "JackTokenizer.h"
-#include <fstream>
-#include <string>
-#include <iostream>
-#include <ctype.h>
 
 using namespace std;
 

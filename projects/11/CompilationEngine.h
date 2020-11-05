@@ -5,12 +5,80 @@
 #include <string>
 #include <fstream>
 #include "JackTokenizer.h"
+#include "VMWriter.h"
+#include "SymbolTable.h"
 using namespace std;
 
+namespace CEhelper
+{
+  string keyword2string(KeyWord Key)
+  {
+    switch(Key)
+    {
+      case CLASS:
+        return "class";
+      case METHOD:
+        return "method";
+      case FUNCTION:
+        return "function";
+      case CONSTRUCTOR:
+        return "constructor";
+      case INT:
+        return "int";
+      case BOOLEAN:
+        return "boolean";
+      case CHAR:
+        return "char";
+      case VOID:
+        return "void";
+      case VAR:
+        return "var";
+      case STATIC:
+        return "static";
+      case FIELD:
+        return "field";
+      case LET:
+        return "let";
+      case DO:
+        return "do";
+      case IF:
+        return "if";
+      case ELSE:
+        return "else";
+      case WHILE:
+        return "while";
+      case RETURN:
+        return "return";
+      case TRUE:
+        return "true";
+      case FALSE:
+        return "false";
+      case WORDNULL:
+        return "null";
+      case THIS:
+        return "this";
+      default:
+        return "error keyword2string";
+    }
+  }
+
+  symboltable::Kind keyword2kind(KeyWord Key)
+  {
+    switch(Key)
+    {
+      case STATIC:
+        return symboltable::STATIC;
+      case FIELD:
+        return symboltable::FIELD;
+      case VAR:
+        return symboltable::VAR;
+    }
+  }
+}
 class CompilationEngine
 {
 public:
-  CompilationEngine(JackTokenizer *tokenizer,string filename);
+  CompilationEngine(JackTokenizer *tokenizer,Symboltable *symboltable,VMWriter *vmwriter,string filename);
   ~CompilationEngine(void);
   void compileClass(void);
   void compileClassVarDec(void);
@@ -44,12 +112,20 @@ public:
   void outstring();
   void outidentifier();
 
-  void getempty(void);
+  symboltable::Kind keyword2kind(string keyword);
+  string keyword2string(KeyWord keyword);
 
 private:
   ofstream outf;
-  JackTokenizer *current_tokenizer;
+  JackTokenizer *TOKEN;
+  Symboltable *SYM;
+  VMWriter *VM;
   string current_filename;
+  string classname;
+  string current_functionname;
+  string subroutinename;
+  KeyWord subroutineType;
+  int numArgs;
 };
 
 #endif
