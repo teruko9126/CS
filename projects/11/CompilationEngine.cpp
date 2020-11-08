@@ -8,6 +8,7 @@ using namespace std;
 
 CompilationEngine::CompilationEngine(JackTokenizer *tokenizer, Symboltable *symboltable, VMWriter *vmwriter,
                                      string filename) {
+  loopnumber = 0;
   current_filename = filename;
   TOKEN = tokenizer;
   SYM = symboltable;
@@ -54,20 +55,20 @@ void CompilationEngine::compileClassVarDec() {
 
   if (TOKEN->tokenType() == KEYWORD) {
     type = CEhelper::keyword2string(TOKEN->keyWord());
-  }else if(TOKEN->tokenType() == IDENTIFIER){
+  } else if (TOKEN->tokenType() == IDENTIFIER) {
     type = TOKEN->identifier();
   }
 
   TOKEN->advance();
   while (TOKEN->symbol() != ";") {
-    switch (TOKEN->tokenType()){
+    switch (TOKEN->tokenType()) {
       case SYMBOL:
         assert(TOKEN->symbol() == ",");
         TOKEN->advance();
         break;
       case IDENTIFIER:
         name = TOKEN->identifier();
-        SYM->define(name,type,kind);
+        SYM->define(name, type, kind);
         TOKEN->advance();
         break;
     }
@@ -78,7 +79,6 @@ void CompilationEngine::compileClassVarDec() {
 }
 
 void CompilationEngine::compileSubroutine() {
-
   SYM->startSubroutine();
 
   subroutineType = TOKEN->keyWord();
@@ -86,13 +86,14 @@ void CompilationEngine::compileSubroutine() {
   //TODOここ以降よくわからん！！！！！！！(181行以降)どうしてthisで置いている？？？
   TOKEN->advance();
 
-  string returntype; //のちに返り値について考えるときに使う
-  if(TOKEN->tokenType() == KEYWORD){
+  string returntype; //!のちに返り値について考えるときに使う?????
+  if (TOKEN->tokenType() == KEYWORD) {
     returntype = CEhelper::keyword2string(TOKEN->keyWord());
-  }else if(TOKEN->tokenType() == IDENTIFIER){
+  } else if (TOKEN->tokenType() == IDENTIFIER) {
     returntype = TOKEN->identifier();
   }
   TOKEN->advance();
+
 
   assert(TOKEN->tokenType() == IDENTIFIER);
   subroutinename = classname + "." + TOKEN->identifier();
@@ -110,10 +111,10 @@ void CompilationEngine::compileSubroutine() {
 }
 
 void CompilationEngine::compileParameterList() {
-  string name,type;
+  string name, type;
   symboltable::Kind kind = symboltable::ARG;
   bool truetype = true;
-  while(TOKEN->symbol() != ")") {
+  while (TOKEN->getcurrentcommand() != ")") {
     switch (TOKEN->tokenType()) {
       case KEYWORD:
         type = CEhelper::keyword2string(TOKEN->keyWord());
@@ -131,6 +132,10 @@ void CompilationEngine::compileParameterList() {
         }
         TOKEN->advance();
         break;
+      case SYMBOL:
+        if(TOKEN->symbol() == ",")
+          TOKEN->advance();
+        break;
     }
   }
 }
@@ -144,10 +149,9 @@ void CompilationEngine::compileSubroutineBody() {
 
   int nLocals = SYM->VarCount(symboltable::VAR);
 
-  VM->writeFunction(subroutinename,nLocals);
+  VM->writeFunction(subroutinename, nLocals);
 
   //TODO constructorとmethodの中身についてはあとで例を見ながら実装！！
-
   compileStatements();
 
   assert(TOKEN->symbol() == "}");
@@ -155,21 +159,21 @@ void CompilationEngine::compileSubroutineBody() {
 }
 
 void CompilationEngine::compileVarDec() {
-  string name,type;
+  string name, type;
   symboltable::Kind kind = symboltable::VAR;
 
   assert(TOKEN->keyWord() == VAR);
   TOKEN->advance();
 
   //this define type
-  if(TOKEN->tokenType() == KEYWORD){
+  if (TOKEN->tokenType() == KEYWORD) {
     type = CEhelper::keyword2string(TOKEN->keyWord());
-  }else if(TOKEN->tokenType() == IDENTIFIER){
+  } else if (TOKEN->tokenType() == IDENTIFIER) {
     type = TOKEN->identifier();
   }
   TOKEN->advance();
 
-  while(TOKEN->getcurrentcommand() != ";") {
+  while (TOKEN->getcurrentcommand() != ";") {
     switch (TOKEN->tokenType()) {
       case SYMBOL:
         assert(TOKEN->symbol() == ",");
@@ -182,13 +186,14 @@ void CompilationEngine::compileVarDec() {
         break;
     }
   }
-    assert(TOKEN->symbol() == ";");
-    TOKEN->advance();
+  assert(TOKEN->symbol() == ";");
+  TOKEN->advance();
 }
 
 void CompilationEngine::compileStatements() {
-  while(TOKEN->keyWord() == LET || TOKEN->keyWord() == IF || TOKEN->keyWord() == WHILE || TOKEN->keyWord() == DO || TOKEN->keyWord() == RETURN){
-    switch(TOKEN->keyWord()) {
+  while (TOKEN->keyWord() == LET || TOKEN->keyWord() == IF || TOKEN->keyWord() == WHILE || TOKEN->keyWord() == DO ||
+         TOKEN->keyWord() == RETURN) {
+    switch (TOKEN->keyWord()) {
       case LET:
         compileLet();
         break;
@@ -209,42 +214,103 @@ void CompilationEngine::compileStatements() {
 }
 
 void CompilationEngine::compileLet() {
-  outkeyword();
-  no_compileVarName();
-  if (TOKEN->symbol() == "[") {
-    outsymbol();
+  TOKEN->advance();
+
+  string letname = TOKEN->identifier();
+  bool isarray = false;
+  TOKEN->advance();
+
+  if (TOKEN->getcurrentcommand() == "[") {
+    isarray = true;
+    TOKEN->advance();
+
     compileExpression();
-    outsymbol();//"]"
+
+    assert(TOKEN->symbol() == "]");
+    TOKEN->advance();
   }
-  outsymbol();
+
+  assert(TOKEN->symbol() == "=");
+  TOKEN->advance();
+
   compileExpression();
-  outsymbol();
+
+  VM->writePop(CEhelper::kind2Segment(SYM->kindOf(letname)), SYM->indexOf(letname));
+
+  assert(TOKEN->symbol() == ";");
+  TOKEN->advance();
 }
 
 void CompilationEngine::compileIf() {
-  outkeyword(); // if
-  outsymbol(); // (
+  string iftrue = "IFTRUE" + to_string(loopnumber);
+  string iffalse = "IFFALSE" + to_string(loopnumber);
+  loopnumber++;
+
+  TOKEN->advance();
+
+  assert(TOKEN->symbol() == "(");
+  TOKEN->advance();
+
   compileExpression();
-  outsymbol(); // )
-  outsymbol(); // {
+  VM->writeArithmetic(vmwriter::NOT);
+
+  assert(TOKEN->symbol() == ")");
+  VM->writeIf(iftrue);
+  TOKEN->advance();
+
+  assert(TOKEN->symbol() == "{");
+  TOKEN->advance();
+
   compileStatements();
-  outsymbol(); // }
+
+  assert(TOKEN->symbol() == "}");
+  VM->writeGoto(iffalse);
+  TOKEN->advance();
+
+  VM->writeLabel(iftrue);
   if (TOKEN->keyWord() == ELSE) {
-    outkeyword(); // else
-    outsymbol(); // {
+    TOKEN->advance();
+
+    assert(TOKEN->symbol() == "{");
+    TOKEN->advance();
+
     compileStatements();
-    outsymbol(); // }
+
+    assert(TOKEN->symbol() == "}");
+    TOKEN->advance();
   }
+  VM->writeLabel(iffalse);
 }
 
 void CompilationEngine::compileWhile() {
-  outkeyword(); //while
-  outsymbol(); // (
+  string whiletrue = "WHILETRUE" + to_string(loopnumber);
+  string whilefalse = "WHILEFALSE" + to_string(loopnumber);
+  loopnumber++;
+
+  assert(TOKEN->keyWord() == WHILE);
+  VM->writeLabel(whiletrue);
+  TOKEN->advance();
+
+  assert(TOKEN->symbol() == "(");
+  TOKEN->advance();
+
   compileExpression();
-  outsymbol(); // )
-  outsymbol(); // {
+  VM->writeArithmetic(vmwriter::NOT);
+  //!if-gotoは0でなければ飛ぶ！
+
+  assert(TOKEN->symbol() == ")");
+  VM->writeIf(whilefalse);
+  TOKEN->advance();
+
+  assert(TOKEN->symbol() == "{");
+  TOKEN->advance();
+
   compileStatements();
-  outsymbol(); // }
+  VM->writeGoto(whiletrue);
+
+  assert(TOKEN->symbol() == "}");
+  VM->writeLabel(whilefalse);
+  TOKEN->advance();
 }
 
 void CompilationEngine::compileDo() {
@@ -254,24 +320,23 @@ void CompilationEngine::compileDo() {
   string name1 = TOKEN->identifier();
   TOKEN->advance();
 
-  if(TOKEN->symbol() == "("){
+  if (TOKEN->symbol() == "(") {
     TOKEN->advance();
 
     //TODO　なぜpointerをpushする？？？？？今はまだここ通らないのでスルーする
-  }else if(TOKEN->symbol() == "."){
+  } else if (TOKEN->symbol() == ".") {
     TOKEN->advance();
 
     string name2 = TOKEN->identifier();
     TOKEN->advance();
     //TODOなんだこいつ？？？？？？
-    if(SYM->kindOf(name1) != symboltable::NONE){
-
-    }else{
+    if (SYM->kindOf(name1) != symboltable::NONE) {
+    } else {
       assert(TOKEN->symbol() == "(");
       TOKEN->advance();
 
       compileExpressionList();
-      VM->writeCall(name1 + "." + name2,numArgs);
+      VM->writeCall(name1 + "." + name2, numArgs);
       numArgs = 0;
 
       assert(TOKEN->symbol() == ")");
@@ -279,7 +344,8 @@ void CompilationEngine::compileDo() {
     }
   }
 
-  //TODO pop temp は必要か？？
+  //!スタックの一番上は返り値が入っているのでとりあえずtempにどかす
+  VM->writePop(vmwriter::TEMP, 0);
 
   assert(TOKEN->symbol() == ";");
   TOKEN->advance();
@@ -289,8 +355,10 @@ void CompilationEngine::compileReturn() {
   assert(TOKEN->keyWord() == RETURN);
   TOKEN->advance();
 
-  if(TOKEN->getcurrentcommand() != ";"){
+  if (TOKEN->getcurrentcommand() != ";") {
     compileExpression();
+  } else {
+    VM->writePush(vmwriter::CONST, 0);
   }
 
   VM->writeReturn();
@@ -319,46 +387,96 @@ void CompilationEngine::compileExpression() {
          TOKEN->getcurrentcommand() == "*" || TOKEN->getcurrentcommand() == "/" ||
          TOKEN->getcurrentcommand() == "&" || TOKEN->getcurrentcommand() == "|" ||
          TOKEN->getcurrentcommand() == "<" || TOKEN->getcurrentcommand() == ">" ||
-         TOKEN->getcurrentcommand() == "="){
+         TOKEN->getcurrentcommand() == "=") {
 
     string op = TOKEN->symbol();
     TOKEN->advance();
 
     compileTerm();
-    if(op == "+") VM->writeArithmetic(vmwriter::ADD);
-    else if(op == "-") VM->writeArithmetic(vmwriter::SUB);
-    else if(op == "*") VM->writeCall("Math.multiply",2);
-    else if(op == "/") VM->writeCall("Math.divide",2);
-    else if(op == "&") VM->writeArithmetic(vmwriter::AND);
-    else if(op == "|") VM->writeArithmetic(vmwriter::OR);
-    else if(op == "<") VM->writeArithmetic(vmwriter::LT);
-    else if(op == ">") VM->writeArithmetic(vmwriter::GT);
-    else if(op == "=") VM->writeArithmetic(vmwriter::EQ);
-    else if(op == "~") VM->writeArithmetic(vmwriter::NOT);
+    if (op == "+")
+      VM->writeArithmetic(vmwriter::ADD);
+    else if (op == "-")
+      VM->writeArithmetic(vmwriter::SUB);
+    else if (op == "*")
+      VM->writeCall("Math.multiply", 2);
+    else if (op == "/")
+      VM->writeCall("Math.divide", 2);
+    else if (op == "&")
+      VM->writeArithmetic(vmwriter::AND);
+    else if (op == "|")
+      VM->writeArithmetic(vmwriter::OR);
+    else if (op == "<")
+      VM->writeArithmetic(vmwriter::LT);
+    else if (op == ">")
+      VM->writeArithmetic(vmwriter::GT);
+    else if (op == "=")
+      VM->writeArithmetic(vmwriter::EQ);
+    else if (op == "~")
+      VM->writeArithmetic(vmwriter::NOT);
   }
 }
 
 void CompilationEngine::compileTerm() {
   switch (TOKEN->tokenType()) {
     case KEYWORD:
+      if (TOKEN->keyWord() == TRUE) {
+        VM->writePush(vmwriter::CONST, 0);
+        VM->writeArithmetic(vmwriter::NOT);
+      } else if (TOKEN->keyWord() == FALSE) {
+        VM->writePush(vmwriter::CONST, 0);
+      }
+      TOKEN->advance();
       break;
     case SYMBOL:
-      if(TOKEN->symbol() == "("){
+      if (TOKEN->symbol() == "(") {
         TOKEN->advance();
 
         compileExpression();
 
         assert(TOKEN->symbol() == ")");
         TOKEN->advance();
+      } else {
+        string unOP = TOKEN->symbol();
+        TOKEN->advance();
+
+        compileTerm();
+
+        if (unOP == "-")
+          VM->writeArithmetic(vmwriter::NEG);
+        else if (unOP == "~")
+          VM->writeArithmetic(vmwriter::NOT);
       }
       break;
     case INT_CONST:
-      VM->writePush(vmwriter::CONST,TOKEN->intVal());
+      VM->writePush(vmwriter::CONST, TOKEN->intVal());
       TOKEN->advance();
       break;
     case STRING_CONST:
       break;
     case IDENTIFIER:
+      string subname1, subname2;
+      subname1 = TOKEN->identifier();
+      TOKEN->advance();
+
+      if (TOKEN->getcurrentcommand() == ".") {
+        TOKEN->advance();
+
+        subname2 = TOKEN->identifier();
+        TOKEN->advance();
+
+        assert(TOKEN->symbol() == "(");
+        TOKEN->advance();
+
+        compileExpressionList();
+
+        VM->writeCall(subname1 + "." + subname2, numArgs);
+        numArgs = 0;
+
+        assert(TOKEN->symbol() == ")");
+        TOKEN->advance();
+      } else {
+        VM->writePush(CEhelper::kind2Segment(SYM->kindOf(subname1)), SYM->indexOf(subname1));
+      }
       break;
   }
 }
@@ -452,9 +570,3 @@ void CompilationEngine::outidentifier() {
   outf << "<identifier> " << TOKEN->identifier() << " </identifier>" << endl;
   TOKEN->advance();
 }
-
-
-
-
-
-

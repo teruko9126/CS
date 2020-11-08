@@ -87,15 +87,7 @@ KeyWord JackTokenizer::keyWord() {
 
 string JackTokenizer::symbol() {
   if (tokenType() == SYMBOL) {
-    if (currentcommand == "<") {
-      return "&lt;";
-    } else if (currentcommand == ">") {
-      return "&gt;";
-    } else if (currentcommand == "&") {
-      return "&amp;";
-    } else {
-      return currentcommand;
-    }
+    return currentcommand;
   }
 }
 
