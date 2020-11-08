@@ -133,7 +133,7 @@ void CompilationEngine::compileParameterList() {
         TOKEN->advance();
         break;
       case SYMBOL:
-        if(TOKEN->symbol() == ",")
+        if (TOKEN->symbol() == ",")
           TOKEN->advance();
         break;
     }
@@ -329,19 +329,22 @@ void CompilationEngine::compileDo() {
 
     string name2 = TOKEN->identifier();
     TOKEN->advance();
-    //TODOなんだこいつ？？？？？？
+
+    //!構造体へと移動する際はそのアドレスを最初の引数として渡す
     if (SYM->kindOf(name1) != symboltable::NONE) {
-    } else {
-      assert(TOKEN->symbol() == "(");
-      TOKEN->advance();
-
-      compileExpressionList();
-      VM->writeCall(name1 + "." + name2, numArgs);
-      numArgs = 0;
-
-      assert(TOKEN->symbol() == ")");
-      TOKEN->advance();
+      VM->writePush(CEhelper::kind2Segment(SYM->kindOf(name1)), SYM->indexOf(name1));
+      numArgs++;
+      name1 = SYM->typeOf(name1);
     }
+    assert(TOKEN->symbol() == "(");
+    TOKEN->advance();
+
+    compileExpressionList();
+    VM->writeCall(name1 + "." + name2, numArgs);
+    numArgs = 0;
+
+    assert(TOKEN->symbol() == ")");
+    TOKEN->advance();
   }
 
   //!スタックの一番上は返り値が入っているのでとりあえずtempにどかす

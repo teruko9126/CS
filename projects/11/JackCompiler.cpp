@@ -15,7 +15,7 @@
 
 int main(int argc, char *argv[])
 {
-  string filename = "/Users/kimotofune/Desktop/nand2tetris/projects/11/ConvertToBin/Main.jack";
+  string filename = argv[1];
   // .jack付ける
 
   preexec preexec1(filename);
