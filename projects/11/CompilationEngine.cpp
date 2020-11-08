@@ -60,7 +60,7 @@ void CompilationEngine::compileClassVarDec() {
   }
 
   TOKEN->advance();
-  while (TOKEN->symbol() != ";") {
+  while (TOKEN->getcurrentcommand() != ";") {
     switch (TOKEN->tokenType()) {
       case SYMBOL:
         assert(TOKEN->symbol() == ",");
@@ -151,7 +151,18 @@ void CompilationEngine::compileSubroutineBody() {
 
   VM->writeFunction(subroutinename, nLocals);
 
-  //TODO constructorとmethodの中身についてはあとで例を見ながら実装！！
+  //functionは実際にその中身を動かす
+  //constructorは初期化
+  //methodはその中身をその場で動かすわけではない、もし動かしたらこういうことがおこるよ、的な説明書
+  if(subroutineType == CONSTRUCTOR){
+    VM->writePush(vmwriter::CONST,SYM->VarCount(symboltable::FIELD));
+    VM->writeCall("Memory.alloc",1);
+    VM->writePop(vmwriter::POINTER,0);
+  }else if(subroutineType == METHOD){
+    //一番最初のargumentにアドレスを渡している
+    VM->writePush(vmwriter::ARG,0);
+    VM->writePop(vmwriter::POINTER,0);
+  }
   compileStatements();
 
   assert(TOKEN->symbol() == "}");
@@ -314,20 +325,26 @@ void CompilationEngine::compileWhile() {
 }
 
 void CompilationEngine::compileDo() {
+  string name1,name2;
   assert(TOKEN->keyWord() == DO);
   TOKEN->advance();
 
-  string name1 = TOKEN->identifier();
+  name1 = TOKEN->identifier();
   TOKEN->advance();
 
   if (TOKEN->symbol() == "(") {
     TOKEN->advance();
+    VM->writePush(vmwriter::POINTER,0);
+    numArgs++;
+
+    name2 = name1;
+    name1 = classname;
 
     //TODO　なぜpointerをpushする？？？？？今はまだここ通らないのでスルーする
   } else if (TOKEN->symbol() == ".") {
     TOKEN->advance();
 
-    string name2 = TOKEN->identifier();
+    name2 = TOKEN->identifier();
     TOKEN->advance();
 
     //!構造体へと移動する際はそのアドレスを最初の引数として渡す
@@ -339,13 +356,14 @@ void CompilationEngine::compileDo() {
     assert(TOKEN->symbol() == "(");
     TOKEN->advance();
 
-    compileExpressionList();
-    VM->writeCall(name1 + "." + name2, numArgs);
-    numArgs = 0;
-
-    assert(TOKEN->symbol() == ")");
-    TOKEN->advance();
   }
+
+  compileExpressionList();
+  VM->writeCall(name1 + "." + name2, numArgs);
+  numArgs = 0;
+
+  assert(TOKEN->symbol() == ")");
+  TOKEN->advance();
 
   //!スタックの一番上は返り値が入っているのでとりあえずtempにどかす
   VM->writePop(vmwriter::TEMP, 0);
@@ -427,6 +445,8 @@ void CompilationEngine::compileTerm() {
         VM->writeArithmetic(vmwriter::NOT);
       } else if (TOKEN->keyWord() == FALSE) {
         VM->writePush(vmwriter::CONST, 0);
+      }else if(TOKEN->keyWord() == THIS){
+        VM->writePush(vmwriter::POINTER,0);
       }
       TOKEN->advance();
       break;

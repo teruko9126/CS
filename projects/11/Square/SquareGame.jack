@@ -37,16 +37,6 @@ class SquareGame {
       return;
    }
 
-   /** Moves the square in the current direction. */
-   method void moveSquare() {
-      if (direction = 1) { do square.moveUp(); }
-      if (direction = 2) { do square.moveDown(); }
-      if (direction = 3) { do square.moveLeft(); }
-      if (direction = 4) { do square.moveRight(); }
-      do Sys.wait(5);  // delays the next movement
-      return;
-   }
-
    /** Runs the game: handles the user's inputs and moves the square accordingly */
    method void run() {
       var char key;  // the key currently pressed by the user
@@ -75,6 +65,16 @@ class SquareGame {
      } // while
      return;
    }
+
+      /** Moves the square in the current direction. */
+      method void moveSquare() {
+         if (direction = 1) { do square.moveUp(); }
+         if (direction = 2) { do square.moveDown(); }
+         if (direction = 3) { do square.moveLeft(); }
+         if (direction = 4) { do square.moveRight(); }
+         do Sys.wait(5);  // delays the next movement
+         return;
+      }
 }
 
 
