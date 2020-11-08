@@ -67,6 +67,7 @@ public:
   string getcurrentcommand(void);
 
 private:
+  string returnstring;
   string currentcommand;
   ifstream inf;
   string tokenize_filename;

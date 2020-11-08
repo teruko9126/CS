@@ -9,6 +9,7 @@ using namespace std;
 CompilationEngine::CompilationEngine(JackTokenizer *tokenizer, Symboltable *symboltable, VMWriter *vmwriter,
                                      string filename) {
   loopnumber = 0;
+  stringnumber = 0;
   current_filename = filename;
   TOKEN = tokenizer;
   SYM = symboltable;
@@ -82,8 +83,10 @@ void CompilationEngine::compileSubroutine() {
   SYM->startSubroutine();
 
   subroutineType = TOKEN->keyWord();
-  //if(subroutineType == METHOD)
-  //TODOここ以降よくわからん！！！！！！！(181行以降)どうしてthisで置いている？？？
+  //"this"という名前で常にアドレスを参照可能
+  if (subroutineType == METHOD) {
+    SYM->define("this", classname, symboltable::ARG);
+  }
   TOKEN->advance();
 
   string returntype; //!のちに返り値について考えるときに使う?????
@@ -154,14 +157,14 @@ void CompilationEngine::compileSubroutineBody() {
   //functionは実際にその中身を動かす
   //constructorは初期化
   //methodはその中身をその場で動かすわけではない、もし動かしたらこういうことがおこるよ、的な説明書
-  if(subroutineType == CONSTRUCTOR){
-    VM->writePush(vmwriter::CONST,SYM->VarCount(symboltable::FIELD));
-    VM->writeCall("Memory.alloc",1);
-    VM->writePop(vmwriter::POINTER,0);
-  }else if(subroutineType == METHOD){
+  if (subroutineType == CONSTRUCTOR) {
+    VM->writePush(vmwriter::CONST, SYM->VarCount(symboltable::FIELD));
+    VM->writeCall("Memory.alloc", 1);
+    VM->writePop(vmwriter::POINTER, 0);
+  } else if (subroutineType == METHOD) {
     //一番最初のargumentにアドレスを渡している
-    VM->writePush(vmwriter::ARG,0);
-    VM->writePop(vmwriter::POINTER,0);
+    VM->writePush(vmwriter::ARG, 0);
+    VM->writePop(vmwriter::POINTER, 0);
   }
   compileStatements();
 
@@ -237,6 +240,9 @@ void CompilationEngine::compileLet() {
 
     compileExpression();
 
+    VM->writePush(CEhelper::kind2Segment(SYM->kindOf(letname)), SYM->indexOf(letname));
+    VM->writeArithmetic(vmwriter::ADD);
+
     assert(TOKEN->symbol() == "]");
     TOKEN->advance();
   }
@@ -246,7 +252,16 @@ void CompilationEngine::compileLet() {
 
   compileExpression();
 
-  VM->writePop(CEhelper::kind2Segment(SYM->kindOf(letname)), SYM->indexOf(letname));
+  if (isarray) {
+    VM->writePop(vmwriter::TEMP, 0);
+    VM->writePop(vmwriter::POINTER, 1);
+    VM->writePush(vmwriter::TEMP, 0);
+    //thatはpointer[1]の値をアドレスとみて、その中の値を変更させる
+    VM->writePop(vmwriter::THAT, 0);
+
+  } else {
+    VM->writePop(CEhelper::kind2Segment(SYM->kindOf(letname)), SYM->indexOf(letname));
+  }
 
   assert(TOKEN->symbol() == ";");
   TOKEN->advance();
@@ -325,7 +340,7 @@ void CompilationEngine::compileWhile() {
 }
 
 void CompilationEngine::compileDo() {
-  string name1,name2;
+  string name1, name2;
   assert(TOKEN->keyWord() == DO);
   TOKEN->advance();
 
@@ -334,7 +349,7 @@ void CompilationEngine::compileDo() {
 
   if (TOKEN->symbol() == "(") {
     TOKEN->advance();
-    VM->writePush(vmwriter::POINTER,0);
+    VM->writePush(vmwriter::POINTER, 0);
     numArgs++;
 
     name2 = name1;
@@ -438,6 +453,7 @@ void CompilationEngine::compileExpression() {
 }
 
 void CompilationEngine::compileTerm() {
+  string subname1, subname2;
   switch (TOKEN->tokenType()) {
     case KEYWORD:
       if (TOKEN->keyWord() == TRUE) {
@@ -445,8 +461,8 @@ void CompilationEngine::compileTerm() {
         VM->writeArithmetic(vmwriter::NOT);
       } else if (TOKEN->keyWord() == FALSE) {
         VM->writePush(vmwriter::CONST, 0);
-      }else if(TOKEN->keyWord() == THIS){
-        VM->writePush(vmwriter::POINTER,0);
+      } else if (TOKEN->keyWord() == THIS) {
+        VM->writePush(vmwriter::POINTER, 0);
       }
       TOKEN->advance();
       break;
@@ -475,9 +491,18 @@ void CompilationEngine::compileTerm() {
       TOKEN->advance();
       break;
     case STRING_CONST:
+      usestring = TOKEN->stringVal();
+      stringnumber = usestring.size();
+      VM->writePush(vmwriter::CONST, stringnumber);
+      VM->writeCall("String.new", 1);
+      for (int i = 0; i < stringnumber; i++) {
+        VM->writePush(vmwriter::CONST, usestring[i]);
+        VM->writeCall("String.appendChar", 2);
+      }
+
+      TOKEN->advance();
       break;
     case IDENTIFIER:
-      string subname1, subname2;
       subname1 = TOKEN->identifier();
       TOKEN->advance();
 
@@ -496,6 +521,17 @@ void CompilationEngine::compileTerm() {
         numArgs = 0;
 
         assert(TOKEN->symbol() == ")");
+        TOKEN->advance();
+      } else if (TOKEN->symbol() == "[") {
+        TOKEN->advance();
+
+        compileExpression();
+        VM->writePush(CEhelper::kind2Segment(SYM->kindOf(subname1)), SYM->indexOf(subname1));
+        VM->writeArithmetic(vmwriter::ADD);
+
+        assert(TOKEN->symbol() == "]");
+        VM->writePop(vmwriter::POINTER, 1);
+        VM->writePush(vmwriter::THAT, 0);
         TOKEN->advance();
       } else {
         VM->writePush(CEhelper::kind2Segment(SYM->kindOf(subname1)), SYM->indexOf(subname1));

@@ -4,6 +4,7 @@ using namespace std;
 
 JackTokenizer::JackTokenizer(string filename) {
   tokenize_filename = filename;
+  returnstring = "";
   inf.open(filename.c_str());
   if (!inf.is_open())
     cout << "can't open tokenizer:" << filename << endl;
@@ -100,16 +101,19 @@ int JackTokenizer::intVal() {
 }
 
 string JackTokenizer::stringVal() {
-  string currentstring = "";
   if (tokenType() == STRING_CONST) {
-    advance();
+    //ダブルクウォーテーションの処理はここで終わらせている！！！
+    inf >> currentcommand;
+    returnstring += currentcommand;
+    inf >> currentcommand;
     while (currentcommand[0] != '"') {
-      cout << currentstring << endl;
-      currentstring += currentcommand + " ";
-      advance();
+      returnstring += " " + currentcommand;
+      inf >> currentcommand;
     }
+    currentcommand = returnstring;
+    returnstring = "";
   }
-  return currentstring;
+  return currentcommand;
 }
 
 string JackTokenizer::keyword2command(KeyWord input_keyword) {

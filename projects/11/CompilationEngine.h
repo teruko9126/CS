@@ -172,6 +172,8 @@ private:
   string subroutinename;
   KeyWord subroutineType;
   int numArgs;
+  int stringnumber;
+  string usestring;
 };
 
 #endif
