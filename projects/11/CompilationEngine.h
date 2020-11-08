@@ -10,89 +10,81 @@
 
 using namespace std;
 
-namespace CEhelper
-{
-  string keyword2string(KeyWord Key)
-  {
-    switch (Key)
-    {
-    case CLASS:
-      return "class";
-    case METHOD:
-      return "method";
-    case FUNCTION:
-      return "function";
-    case CONSTRUCTOR:
-      return "constructor";
-    case INT:
-      return "int";
-    case BOOLEAN:
-      return "boolean";
-    case CHAR:
-      return "char";
-    case VOID:
-      return "void";
-    case VAR:
-      return "var";
-    case STATIC:
-      return "static";
-    case FIELD:
-      return "field";
-    case LET:
-      return "let";
-    case DO:
-      return "do";
-    case IF:
-      return "if";
-    case ELSE:
-      return "else";
-    case WHILE:
-      return "while";
-    case RETURN:
-      return "return";
-    case TRUE:
-      return "true";
-    case FALSE:
-      return "false";
-    case WORDNULL:
-      return "null";
-    case THIS:
-      return "this";
-    default:
-      return "error keyword2string";
+namespace CEhelper {
+  string keyword2string(KeyWord Key) {
+    switch (Key) {
+      case CLASS:
+        return "class";
+      case METHOD:
+        return "method";
+      case FUNCTION:
+        return "function";
+      case CONSTRUCTOR:
+        return "constructor";
+      case INT:
+        return "int";
+      case BOOLEAN:
+        return "boolean";
+      case CHAR:
+        return "char";
+      case VOID:
+        return "void";
+      case VAR:
+        return "var";
+      case STATIC:
+        return "static";
+      case FIELD:
+        return "field";
+      case LET:
+        return "let";
+      case DO:
+        return "do";
+      case IF:
+        return "if";
+      case ELSE:
+        return "else";
+      case WHILE:
+        return "while";
+      case RETURN:
+        return "return";
+      case TRUE:
+        return "true";
+      case FALSE:
+        return "false";
+      case WORDNULL:
+        return "null";
+      case THIS:
+        return "this";
+      default:
+        return "error keyword2string";
     }
   }
 
-  symboltable::Kind keyword2kind(KeyWord Key)
-  {
-    switch (Key)
-    {
-    case STATIC:
-      return symboltable::STATIC;
-    case FIELD:
-      return symboltable::FIELD;
-    case VAR:
-      return symboltable::VAR;
+  symboltable::Kind keyword2kind(KeyWord Key) {
+    switch (Key) {
+      case STATIC:
+        return symboltable::STATIC;
+      case FIELD:
+        return symboltable::FIELD;
+      case VAR:
+        return symboltable::VAR;
     }
   }
 
-  vmwriter::Segment kind2Segment(symboltable::Kind kind)
-  {
-    switch (kind)
-    {
-    case symboltable::STATIC:
-      return vmwriter::STATIC;
-    case symboltable::FIELD:
-      return vmwriter::THIS;
-    case symboltable::ARG:
-      return vmwriter::ARG;
-    case symboltable::VAR:
-      return vmwriter::LOCAL;
+  vmwriter::Segment kind2Segment(symboltable::Kind kind) {
+    switch (kind) {
+      case symboltable::STATIC:
+        return vmwriter::STATIC;
+      case symboltable::FIELD:
+        return vmwriter::THIS;
+      case symboltable::ARG:
+        return vmwriter::ARG;
+      case symboltable::VAR:
+        return vmwriter::LOCAL;
     }
   }
 } // namespace CEhelper
-class CompilationEngine
-{
+class CompilationEngine {
 public:
   CompilationEngine(JackTokenizer *tokenizer, Symboltable *symboltable, VMWriter *vmwriter, string filename);
 
@@ -127,34 +119,6 @@ public:
   void compileTerm(void);
 
   void compileExpressionList(void);
-
-  void no_compileType(void);
-
-  void no_compileClassName(void);
-
-  void no_compileSubroutineName(void);
-
-  void no_compileVarName(void);
-
-  void no_compileStatement(void);
-
-  void no_compileSubroutineCall(void);
-
-  void no_compileOp(void);
-
-  void no_compileUnaryOp(void);
-
-  void no_KeywordConstant(void);
-
-  void outkeyword();
-
-  void outsymbol();
-
-  void outinteger();
-
-  void outstring();
-
-  void outidentifier();
 
   symboltable::Kind keyword2kind(string keyword);
 

@@ -463,6 +463,8 @@ void CompilationEngine::compileTerm() {
         VM->writePush(vmwriter::CONST, 0);
       } else if (TOKEN->keyWord() == THIS) {
         VM->writePush(vmwriter::POINTER, 0);
+      } else if (TOKEN->keyWord() == WORDNULL) {
+        VM->writePush(vmwriter::CONST, 0);
       }
       TOKEN->advance();
       break;
@@ -544,94 +546,4 @@ void CompilationEngine::compileTerm() {
       }
       break;
   }
-}
-
-void CompilationEngine::no_compileType() {
-  if (TOKEN->tokenType() == KEYWORD) {
-    outkeyword();
-  } else if (TOKEN->tokenType() == IDENTIFIER) {
-    outidentifier();
-  }
-}
-
-void CompilationEngine::no_compileClassName() {
-  classname = TOKEN->identifier();
-  TOKEN->advance();
-}
-
-void CompilationEngine::no_compileVarName() {
-  outidentifier();
-}
-
-void CompilationEngine::no_compileSubroutineName() {
-  outidentifier();
-}
-
-void CompilationEngine::no_compileStatement() {
-  if (TOKEN->keyWord() == LET) {
-    compileLet();
-  }
-  if (TOKEN->keyWord() == IF) {
-    compileIf();
-  }
-  if (TOKEN->keyWord() == WHILE) {
-    compileWhile();
-  }
-  if (TOKEN->keyWord() == DO) {
-    compileDo();
-  }
-  if (TOKEN->keyWord() == RETURN) {
-    compileReturn();
-  }
-}
-
-void CompilationEngine::no_compileOp() {
-  outsymbol();
-}
-
-void CompilationEngine::no_compileUnaryOp() {
-  outsymbol();
-}
-
-void CompilationEngine::no_KeywordConstant() {
-  outkeyword();
-}
-
-void CompilationEngine::no_compileSubroutineCall() {
-  no_compileSubroutineName(); //
-  //maybe this isn't subroutineName, this is classname or varname
-  //but all of this is identifier ,so it's ok
-
-  if (TOKEN->symbol() == ".") {
-    outsymbol();
-    no_compileSubroutineName();
-  }
-  outsymbol(); // (
-  compileExpressionList();
-  outsymbol(); // )
-}
-
-void CompilationEngine::outkeyword() {
-  outf << "<keyword> " << TOKEN->keyword2command(TOKEN->keyWord()) << " </keyword>" << endl;
-  TOKEN->advance();
-}
-
-void CompilationEngine::outsymbol() {
-  outf << "<symbol> " << TOKEN->symbol() << " </symbol>" << endl;
-  TOKEN->advance();
-}
-
-void CompilationEngine::outinteger() {
-  outf << "<integerConstant> " << TOKEN->intVal() << " </integerConstant>" << endl;
-  TOKEN->advance();
-}
-
-void CompilationEngine::outstring() {
-  outf << "<stringConstant> " << TOKEN->stringVal() << " </stringConstant>" << endl;
-  TOKEN->advance();
-}
-
-void CompilationEngine::outidentifier() {
-  outf << "<identifier> " << TOKEN->identifier() << " </identifier>" << endl;
-  TOKEN->advance();
 }
