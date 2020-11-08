@@ -362,7 +362,7 @@ void CompilationEngine::compileDo() {
     name2 = TOKEN->identifier();
     TOKEN->advance();
 
-    //!構造体へと移動する際はそのアドレスを最初の引数として渡す
+    //!名前から構造体と判明した場合、構造体のアドレスをが引数として必要なので、そのアドレスを最初の引数として渡す
     if (SYM->kindOf(name1) != symboltable::NONE) {
       VM->writePush(CEhelper::kind2Segment(SYM->kindOf(name1)), SYM->indexOf(name1));
       numArgs++;
@@ -516,6 +516,12 @@ void CompilationEngine::compileTerm() {
         TOKEN->advance();
 
         compileExpressionList();
+
+        if (SYM->kindOf(subname1) != symboltable::NONE) {
+          VM->writePush(CEhelper::kind2Segment(SYM->kindOf(subname1)), SYM->indexOf(subname1));
+          numArgs++;
+          subname1 = SYM->typeOf(subname1);
+        }
 
         VM->writeCall(subname1 + "." + subname2, numArgs);
         numArgs = 0;
